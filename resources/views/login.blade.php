@@ -13,8 +13,8 @@
 
 <body class="font-sans antialiased dark:bg-black dark:text-white/50">
     <div class="container-fluid">
-        <div class="row d-flex flex-row justify-content-center w-100">
-            <div class="col-8 w-100 ">
+        <div class="row d-flex flex-row">
+            <div class="col-8 d-flex flex-column justify-content-center">
                 <nav class="navbar bg-body-tertiary row">
                     <div class="container-fluid">
                         <a class="navbar-brand" href="#">
@@ -32,18 +32,18 @@
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Username</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1"
+                        <input type="text" class="form-control" id="exampleFormControlInput1"
                             placeholder="Masukkan Username">
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Kata Sandi</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1"
+                        <input type="password" class="form-control" id="exampleFormControlInput1"
                             placeholder="Masukkan Kata Sandi">
                     </div> 
                     <p class="text-base text-success text-end">Lupa Kata Sandi?</p> 
-                    <button class="btn btn-success text-white btn-lg">
+                    <a href="{{ url('home') }}" class="btn btn-success text-white btn-lg">
                         Masuk
-                    </button>
+                    </a>
                     <p class="text-base text-gray-500 text-center my-5"> Atau Masuk dengan Google</p>
                     <button class="btn btn-light">
                         <img src="assets/google.png" alt="" height="35px">

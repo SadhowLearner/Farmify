@@ -9,7 +9,7 @@
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Core theme CSS (includes Bootstrap)-->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/css/app.css'])
+    @vite(['resources/sass/app.scss', 'resources/css/app.css'])
 </head>
 
 <body>
@@ -31,6 +31,7 @@
                     <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">Services</a></li>
+                    <li class="nav-item"><a href="{{ url('/login') }}" class="btn btn-success">Masuk</a></li>
                 </ul>
             </div>
         </div>
@@ -91,9 +92,9 @@
             </div>
         </div>
         <!-- Section -->
-         <section class="d-flex flex-row justify-content-center mt-5">
+        <section class="d-flex flex-row justify-content-center mt-5">
             
-         <div class="card  mx-5 my-5 border-0">
+            <div class="card  mx-5 my-5 border-0">
                 <div class="row g-0 d-flex align-items-center">
                     <div class="col-md-4">
                         <img src="assets/meat.jpg" class="img-fluid rounded-5" alt="...">
@@ -107,7 +108,7 @@
                     </div>
                 </div>
             </div>
-         </section>
+        </section>
     </div>
     <!-- Footer-->
     <footer class="py-5 bg-dark">
@@ -115,6 +116,7 @@
             <p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p>
         </div>
     </footer>
+    @Vite(['resources/js/app.js'])
 </body>
 
 </html>
