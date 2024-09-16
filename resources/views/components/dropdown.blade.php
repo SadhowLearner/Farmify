@@ -1,4 +1,4 @@
-@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'tw-py-1 tw-bg-white dark:tw-bg-gray-700'])
+@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'tw-py-1 tw-bg-white'])
 
 @php
 $alignmentClasses = match ($align) {
@@ -28,7 +28,7 @@ $width = match ($width) {
             class="tw-absolute tw-z-50 tw-mt-2 {{ $width }} tw-rounded-md tw-shadow-lg {{ $alignmentClasses }}"
             style="display: none;"
             @click="open = false">
-        <div class="tw-rounded-md tw-ring-1 tw-ring-black tw-ring-opacity-5 {{ $contentClasses }}">
+        <div class="tw-rounded-md tw-ring-1 tw-ring-green-600 tw-ring-opacity-5 {{ $contentClasses }}">
             {{ $content }}
         </div>
     </div>

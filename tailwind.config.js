@@ -1,5 +1,6 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
+import daisyui from "daisyui"
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -13,10 +14,16 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Roboto', ...defaultTheme.fontFamily.sans],  // Roboto sebagai font utama
+                poppins: ['Poppins', ...defaultTheme.fontFamily.sans],
             },
         },
     },
-
-    plugins: [forms],
+    plugins: [
+        daisyui,
+        forms
+    ],
+    daisyui: {
+        themes: ["light"], // Hanya menyertakan tema light
+    },
 };

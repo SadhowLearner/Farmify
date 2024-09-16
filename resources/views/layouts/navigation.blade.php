@@ -15,6 +15,10 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('products.show-products')" :active="request()->routeIs('products.show-products')">
+                        {{ __('Product List') }}
+                    </x-nav-link>
+                    
                 </div>
             </div>
 
@@ -22,7 +26,7 @@
             <div class="tw-hidden sm:tw-flex sm:tw-items-center sm:tw-ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="tw-inline-flex tw-items-center tw-px-3 tw-py-2 tw-border tw-border-transparent tw-text-sm tw-leading-4 tw-font-medium tw-rounded-md tw-text-green-500 dark:tw-text-green-400 tw-bg-white dark:tw-bg-green-800 hover:tw-text-green-700 dark:hover:tw-text-green-300 focus:tw-outline-none tw-transition tw-ease-in-out tw-duration-150">
+                        <button class="tw-inline-flex tw-items-center tw-px-3 tw-py-2 tw-border tw-border-transparent tw-text-sm tw-leading-4 tw-font-medium tw-rounded-md tw-text-green-500 dark:tw-text-green-400 tw-bg-white  hover:tw-text-green-700 focus:tw-outline-none tw-transition tw-ease-in-out tw-duration-150">
                             <div>{{ Auth::user()->name }}</div>
 
                             <div class="tw-ms-1">
@@ -70,6 +74,10 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('products.show-products')" :active="request()->routeIs('products.show-products')">
+                {{ __('Product List') }}
+            </x-responsive-nav-link>
+            
         </div>
 
         <!-- Responsive Settings Options -->
