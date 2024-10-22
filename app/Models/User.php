@@ -7,10 +7,10 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-class User extends Authenticatable
+use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Support\Facades\Storage;
+class User extends Authenticatable implements HasAvatar
 {
-    use CrudTrait;
     use HasFactory, Notifiable;
 
     /**
@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role', 
+        'avatar_url',
     ];
 
     /**
@@ -34,7 +36,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $primaryKey = 'id_user';
+    protected $primaryKey = 'id';
 
     /**
      * Get the attributes that should be cast.
@@ -47,5 +49,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             // 'password' => 'hash`ed',
         ];
+    }
+
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url ? Storage::url("$this->avatar_url") : null;
     }
 }

@@ -3,7 +3,30 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use Illuminate\Support\Arr;
 
+class Product {
+    public static function all() {
+        return [
+                [
+                    'name' => 'Daging Sapi',
+                    'id' => 'apa-penyebab-kita-mengantuk',
+                    'desc' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit, quae! Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit, quae!',
+                    'price' => 23000,
+                    'stock' => 10,
+                    'img' => 'meat.jpg',
+                ],
+                [
+                    'name' => 'Telur',
+                    'id' => 'cara-tidur',
+                    'desc' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit, quae! Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit, quae!',
+                    'price' =>  23000,
+                    'stock' => 10,
+                    'img' => 'egg-product.jpg',
+                ]
+            ];
+    } 
+}
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,7 +36,7 @@ Route::get('/', function () {
 
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard', ['products' => Product::all()]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Profile Controller

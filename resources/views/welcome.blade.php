@@ -14,10 +14,10 @@
     @vite(['resources/sass/app.scss', 'resources/css/app.css'])
 </head>
 
-<body class="tw-font-sans">
-    <div class="tw-container">
+<body class="tw-font-sans tw-overflow-x-hidden">
+    <div class="tw-container tw-w-screen">
 
-        <nav class="tw-navbar tw-bg-white-100">
+        <nav class="tw-navbar tw-w-screen tw-bg-white-100">
             <div class="tw-navbar-start">
                 <div class="tw-dropdown">
                     <div tabindex="0" role="button" class="tw-btn tw-btn-ghost lg:tw-hidden">
@@ -77,9 +77,9 @@
         </nav>
 
         <!-- Page Content-->
-        <div class="tw-hero bg-base-200  tw-min-h-screen">
-            <div class="tw-hero-content text-center">
-                <div class="tw-max-w-md">
+        <section class="tw-hero tw-w-screen tw-mt-3 tw-min-h-screen">
+            <div class="tw-hero-content tw-text-center ">
+                <div class="tw-w-[75%]">
                     <h1 class="tw-text-5xl tw-font-bold tw-font-poppins">Selamat Datang di Endog Ceplok POS</h1>
                     <p class="tw-py-6 tw-font-sans mt-4 tw-line-height-3">
                         Kelola produk unggas Anda dengan mudah dan efisien. Permudah inventaris, pantau penjualan, dan
@@ -87,8 +87,33 @@
                         Anda
                         bisa fokus pada hal yang lebih penting.
                     </p>
-                    <a href="{{ route('login') }}" class="tw-btn tw-btn-success tw-mt-3 tw-btn-lg tw-text-neutral-50 tw-rounded-full">Mulai
+                    <a href="{{ route('login') }}"
+                        class="tw-btn tw-btn-success tw-mt-3 tw-btn-lg  tw-text-neutral-50 tw-rounded-full">Mulai
                         Kelola Toko Anda</a>
+
+                    
+                        {{-- card --}}
+
+                    <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-5 tw-gap-4">
+
+                        @for ($i = 0; $i < 5; $i++)    
+                        <div class="tw-card tw-card-bordered mx-2 tw-mt-8 tw-bg-slate-100 tw-w-42 tw-shadow-xl">
+                            <figure class="tw-w-full">
+                                <img src="assets/egg-product.jpg"
+                                    alt="Shoes" class="tw-rounded-xl tw-w-[32em]" />
+                            </figure>
+                            <div class="tw-card-body">
+                                <h2 class="tw-card-title tw-text-center">Telur</h2>
+                                <div class="tw-flex tw-flex-row">
+                                    <p class="tw-text-sm tw-card-text tw-text-left mt-2 tw-text-gray-600"><b>24.000</b></p>
+                                    <div class="tw-card-actions tw-justify-end">
+                                        <button class="tw-btn tw-btn-success tw-text-white tw-btn-sm">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endfor
+                    </div>
                 </div>
             </div>
         </div>

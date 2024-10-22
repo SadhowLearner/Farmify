@@ -1,35 +1,34 @@
-@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'tw-py-1 tw-bg-white'])
+<div class="tw-dropdown">
+    <div tabindex="0" role="button" class="btn m-1">
+        <div tabindex="0" role="button"
+            class="tw-inline-flex tw-items-center tw-px-3 tw-py-2 tw-border tw-border-transparent tw-text-sm tw-leading-4 tw-font-medium tw-rounded-md tw-text-green-500 dark:tw-text-green-400 tw-bg-white  hover:tw-text-green-700 focus:tw-outline-none tw-transition tw-ease-in-out tw-duration-150">
+            <div>{{ $slot }}</div>
 
-@php
-$alignmentClasses = match ($align) {
-    'left' => 'ltr:origin-top-left rtl:origin-top-right start-0',
-    'top' => 'origin-top',
-    default => 'ltr:origin-top-right rtl:origin-top-left end-0',
-};
-
-$width = match ($width) {
-    '48' => 'w-48',
-    default => $width,
-};
-@endphp
-
-<div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
-    <div @click="open = ! open">
-        {{ $trigger }}
-    </div>
-
-    <div x-show="open"
-            x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0 scale-95"
-            x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition ease-in duration-75"
-            x-transition:leave-start="opacity-100 scale-100"
-            x-transition:leave-end="opacity-0 scale-95"
-            class="tw-absolute tw-z-50 tw-mt-2 {{ $width }} tw-rounded-md tw-shadow-lg {{ $alignmentClasses }}"
-            style="display: none;"
-            @click="open = false">
-        <div class="tw-rounded-md tw-ring-1 tw-ring-green-600 tw-ring-opacity-5 {{ $contentClasses }}">
-            {{ $content }}
+            <div class="tw-ms-1">
+                <svg class="tw-fill-current tw-h-4 tw-w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+            </div>
         </div>
     </div>
+    <ul tabindex="0" class="tw-dropdown-content tw-menu tw-bg-base-100 tw-rounded-box tw-z-[1] tw-w-52 tw-p-2 tw-shadow">
+        <li>
+            <x-dropdown-link :href="route('profile.edit')">
+                {{ __('Profile') }}
+            </x-dropdown-link>
+        </li>
+        <li>
+             <!-- Authentication -->
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <x-link-nav :href="route('logout')"
+                    onclick="event.preventDefault();
+                                    this.closest('form').submit();">
+                    {{ __('Log Out') }}
+                </x-link-nav>
+            </form>
+        </li>
+    </ul>
 </div>

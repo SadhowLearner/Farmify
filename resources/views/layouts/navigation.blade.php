@@ -1,108 +1,69 @@
-<nav x-data="{ open: false }" class="bg-light tw-border-b tw">
-    <!-- Primary Navigation Menu -->
-    <div class="tw-max-w-7xl tw-mx-auto tw-px-4 sm:tw-px-6 lg:tw-px-8">
-        <div class="tw-flex tw-justify-between tw-h-16">
-            <div class="tw-flex">
-                <!-- Logo -->
-                <div class="tw-shrink-0 tw-flex tw-items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="tw-block tw-h-9 tw-w-auto tw-fill-current tw-text-green-800 dark:tw-text-green-200" />
-                    </a>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="tw-hidden tw-space-x-8 sm:-tw-my-px sm:tw-ms-10 sm:tw-flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('products.show-products')" :active="request()->routeIs('products.show-products')">
-                        {{ __('Product List') }}
-                    </x-nav-link>
-                    
-                </div>
-            </div>
-
-            <!-- Settings Dropdown -->
-            <div class="tw-hidden sm:tw-flex sm:tw-items-center sm:tw-ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="tw-inline-flex tw-items-center tw-px-3 tw-py-2 tw-border tw-border-transparent tw-text-sm tw-leading-4 tw-font-medium tw-rounded-md tw-text-green-500 dark:tw-text-green-400 tw-bg-white  hover:tw-text-green-700 focus:tw-outline-none tw-transition tw-ease-in-out tw-duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="tw-ms-1">
-                                <svg class="tw-fill-current tw-h-4 tw-w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-tw-me-2 tw-flex tw-items-center sm:tw-hidden">
-                <button @click="open = ! open" class="tw-inline-flex tw-items-center tw-justify-center tw-p-2 tw-rounded-md tw-text-green-400 dark:tw-text-green-500 hover:tw-text-green-500 dark:hover:tw-text-green-400 hover:tw-bg-green-100 dark:hover:tw-bg-green-900 focus:tw-outline-none focus:tw-bg-green-100 dark:focus:tw-bg-green-900 focus:tw-text-green-500 dark:focus:tw-text-green-400 tw-transition tw-duration-150 tw-ease-in-out">
-                    <svg class="tw-h-6 tw-w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'tw-hidden': open, 'tw-inline-flex': ! open }" class="tw-inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'tw-hidden': ! open, 'tw-inline-flex': open }" class="tw-hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+    <div x-data="{ isOpen: false }" class="tw-flex tw-h-screen">
+        <!-- Sidebar -->
+        <div class="tw-bg-slate-50 sm:tw-sticky sm:tw-start-0 tw-text-white tw-w-[10vw] tw-space-y-6 tw-py-7 tw-px-2 tw-inset-y-0 tw-left-0 tw-transform -tw-translate-x-full md:tw-relative md:tw-translate-x-0 tw-transition-transform tw-duration-200 tw-ease-in-out"
+            :class="{ '-tw-translate-x-full': !isOpen, 'tw-translate-x-0': isOpen }">
+            <!-- Logo -->
+            <div class="tw-flex tw-flex-row ">
+                <a href="{{ route('dashboard') }}"
+                    class="tw-bg-white tw-pt-2 tw-rounded-full  tw-flex tw-items-center tw-px-4">
+                    <x-application-logo class="" />
+                </a>
+                <button @click="isOpen = !isOpen"
+                    class="tw-absolute tw-top-0 tw-right-0 tw-m-3 tw-text-white-900 focus:tw-outline-none md:tw-hidden">
+                    <div class="bi bi-x tw-w-6 tw-text-black"></div>
                 </button>
             </div>
-        </div>
-    </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'tw-block': open, 'tw-hidden': ! open}" class="tw-hidden sm:tw-hidden">
-        <div class="tw-pt-2 tw-pb-3 tw-space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('products.show-products')" :active="request()->routeIs('products.show-products')">
-                {{ __('Product List') }}
-            </x-responsive-nav-link>
-            
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="tw-pt-4 tw-pb-1">
-            <div class="tw-px-4">
-                <div class="tw-font-medium tw-text-base ">{{ Auth::user()->name }}</div>
-                <div class="tw-font-medium tw-text-sm ">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="tw-mt-3 tw-space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
+            <!-- Navigation -->
+                <form method="POST" action="{{ route('logout') }}" class="tw-inline-flex tw-flex-col tw-container">
+                    <x-link-nav :href="route('dashboard')" :active="request()->routeIs('dashboard')" :tooltip="'Dashboard'">
+                        <i class="bi bi-house"></i>
+                    </x-link-nav>
+                    <x-link-nav :href="route('dashboard')" :active="request()->routeIs('search')" :tooltip="'Cari'">
+                        <i class="bi bi-search"></i>
+                    </x-link-nav>
+                    <x-link-nav :href="route('dashboard')" :active="request()->routeIs('setting')" :tooltip="'Pengaturan'">
+                        <i class="bi bi-gear"></i>
+                    </x-link-nav>
+                    <x-link-nav :href="route('profile.edit')" :active="request()->routeIs('profile.edit')" :tooltip="'Profile'">
+                        <i class="bi bi-person"></i>
+                    </x-link-nav>
                     @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    <x-link-nav :href="route('logout')"
+                        onclick="event.preventDefault();
+                                        this.closest('form').submit();" :tooltip="'Log Out'">
+                        <i class="bi bi-power"></i>
+                    </x-link-nav>
+                    <div class="tw-flex tw-items-center tw-ms-4">
+                        <x-dropdown width="48">
+                            {{ Auth::user()->name }}< </x-dropdown>
+                    </div>
                 </form>
-            </div>
+        </div>
+
+        <!-- Content area -->
+        <div class="tw-flex-1 tw-flex tw-flex-col">
+            <!-- Header Page  -->
+            <header class="tw-bg-white tw-shadow-md tw-w-full">
+                <div class="tw-flex tw-justify-between tw-items-center tw-px-4 tw-py-3">
+                    <button @click="isOpen = !isOpen" class="tw-text-slate-950 focus:tw-outline-none md:tw-hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="tw-h-6 tw-w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                    <h1 class="tw-text-2xl tw-font-semibold tw-text-black tw-capitalize ">
+                        {{ Str::replace('.', ' ', Route::currentRouteName()) }}</h1>
+                </div>
+            </header>
+            <!-- Main content -->
+            <main class="tw-flex-1 tw-p-6 tw-max-h-screen  tw-overflow-y-auto">
+                {{ $slot }}
+            </main>
         </div>
     </div>
-</nav>
+
+
+
+
+    <!-- Primary Navigation Menu -->

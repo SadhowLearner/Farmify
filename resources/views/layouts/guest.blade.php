@@ -16,15 +16,15 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/sass/app.scss'])
 </head>
 
-<body class="tw-font-sansantialiased tw-bg-green-600 overflow-hidden d-flex align-items-center">
-    <div class="container vh-100 d-flex flex-row justify-content-center align-items-center p-5">
-        <section>
+<body class="tw-font-sansantialiased tw-bg-green-600 lg:tw-overflow-hidden d-flex align-items-center">
+    <div class="container lg:tw-min-h-screen d-flex flex-lg-row flex-sm-column justify-content-lg-center align-items-lg-center p-5">
+        <section class="col-12 col-md-7 col-xl-7">
             <div class="d-flex ms-3 text-white">
                 <div class="col-12 col-xl-9">
                     <div class="d-flex position-relative -tw-start-12 flex-row ms-0">
                         <img class="rounded mb-4 tw-h-36 pt-6" loading="lazy" src="assets/logo.png" height="35px"
                             alt="Farmify Logo">
-                        <span class="display-1">Farmify</span>
+                        <span class="display-1">Endog</span>
                     </div>
 
                     <h2 class="h1 mb-4">Kita mendukung para peternak lokal</h2>
@@ -42,7 +42,7 @@
 
         </section>
         {{-- Card Form --}}
-        <aside class="col-12 col-md-6 col-xl-5 ">
+        <aside class="col-12 col-md-5 col-xl-5 ">
             <div class="card border-0 rounded-4">
                 <div class="card-body p-3 p-md-4 p-xl-5 ">
                     <div class="row">

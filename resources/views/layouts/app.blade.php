@@ -13,29 +13,14 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/sass/app.scss'])
+    @vite(['resources/css/app.css', 'resources/sass/app.scss'])
 </head>
 
 <body class="tw-font-sans tw-antialiased">
     <div class="tw-min-h-screen tw-bg-gray-100 ">
         @include('layouts.navigation')
-
-        <!-- Page Heading -->
-        @isset($header)
-            <header class="tw-bg-white tw-shadow">
-                <div class="tw-max-w-7xl tw-mx-auto tw-py-6 tw-px-4 tw-sm:px-6 tw-lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
-
-
-
-        <!-- Page Content -->
-        <main class="container">
-           {{ $slot }}
-        </main>
     </div>
+    @vite(['resources/js/app.js'])
 </body>
 
 </html>
