@@ -18,37 +18,63 @@ class ProductResource extends Resource
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cube';
+
     protected static ?string $activeNavigationIcon = 'heroicon-s-cube';
-    protected static ?string $label = 'Produk';
+
+    protected static ?string $label = 'Barang';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('supplier_id')
+                    ->label('Pemasok')
+                    ->required()
+                    ->options(
+                        \App\Models\Supplier::all()->pluck('supplier_name', 'id')
+                    )->searchable()
+                    ->createOptionForm(
+                        \App\Filament\Resources\SupplierResource::getForm()
+                    )->createOptionUsing(function (array $data): int {
+                        return \App\Models\Supplier::create($data)->id;
+                    }),
                 Forms\Components\TextInput::make('product_name')
+                    ->label('Nama Barang')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('description')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('unit_price')
+                Forms\Components\TextInput::make('unit_price')->label('Harga')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('stock')
+                Forms\Components\TextInput::make('stock')->label('Stok')
                     ->required()
                     ->disabledOn('edit')
                     ->numeric(),
-                Forms\Components\Select::make('unit')
+                Forms\Components\Select::make('category_id')
+                    ->label('Kategori Barang')
                     ->required()
-                    ->default('pcs')
-                    ->options([
-                        'pcs' => 'Pieces',
-                        'kg' => 'Kg',
-                        'g' => 'Gram',
-                        'l' => 'Liter',
-                        'ml' => 'Ml',
-                        'lusino' => 'Lusin',
-                    ]),
+                    ->options(
+                        \App\Models\Category::all()->pluck('category_name', 'id')
+                    )->searchable()
+                    ->createOptionForm(
+                        \App\Filament\Resources\CategoryResource::getForm()
+                    )
+                    ->createOptionUsing(function (array $data): int {
+                        return \App\Models\Category::create($data)->id;
+                    }),
+                Forms\Components\Select::make('unit_id')
+                    ->label('Satuan Barang')
+                    ->required()
+                    ->options(
+                        \App\Models\Unit::all()->pluck('unit_name', 'id')
+                    )->searchable()
+                    ->createOptionForm(
+                        \App\Filament\Resources\UnitResource::getForm()
+                    )->createOptionUsing(function (array $data): int {
+                        return \App\Models\Unit::create($data)->id;
+                    }),
+                Forms\Components\TextArea::make('description')->label('Deskripsi')
+                    ->maxLength(255)
+                    ->columnSpan('full'),
             ]);
     }
 
@@ -56,15 +82,24 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')->label('ID')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('product_name')
+                    ->label('Nama Barang')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')
+                    ->label('Deskripsi')
+                    ->limit(50)
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('unit_price')
+                    ->label('Harga')
                     ->numeric()
+                    ->money('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('stock')
+                    ->label('Stok')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('unit')
@@ -82,7 +117,9 @@ class ProductResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()->label('Detail'),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

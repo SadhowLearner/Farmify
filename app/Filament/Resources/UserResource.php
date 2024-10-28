@@ -25,21 +25,22 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('avatar_url')->avatar()->label('Avatar'),
-                Forms\Components\TextInput::make('name'),
-                Forms\Components\TextInput::make('email')
+                Forms\Components\TextInput::make('name')->label('Nama')
+                    ->required(),
+                Forms\Components\TextInput::make('email')->label('E-Mail')
                     ->email()
                     ->unique(ignoreRecord: true)
                     ->required(),
-                Forms\Components\TextInput::make('password')
+                Forms\Components\TextInput::make('password')->label('Kata Sandi')
                     ->revealable()
                     ->password()
                     ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
                     ->dehydrated(fn(?string $state): bool => filled($state))
                     ->required(fn(string $operation): bool => $operation === 'create'),
 
-                Forms\Components\Select::make('role')
+                Forms\Components\Select::make('role')->label('Peran')
                     ->options([
-                        'cashier' => 'Cashier',
+                        'cashier' => 'Kasir',
                         'admin' => 'Admin',
                     ])
                     ->required(),
@@ -67,7 +68,9 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()->label('Detail'),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

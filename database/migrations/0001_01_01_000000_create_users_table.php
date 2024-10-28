@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->string('avatar_url')->nullable();
+            $table->json('custom_fields')->nullable();
+            $table->enum('role',['admin','cashier'])->nullable()
+            ->default('cashier');
             $table->timestamps();
         });
 

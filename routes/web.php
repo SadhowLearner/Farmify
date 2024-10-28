@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Arr;
 
-class Product {
+class ProductSample {
     public static function all() {
         return [
                 [
@@ -36,7 +36,7 @@ Route::get('/', function () {
 
 
 Route::get('/dashboard', function () {
-    return view('dashboard', ['products' => Product::all()]);
+    return view('dashboard', ['products' => ProductSample::all()]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Profile Controller

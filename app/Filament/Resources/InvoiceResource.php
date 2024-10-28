@@ -7,6 +7,8 @@ use App\Filament\Resources\InvoiceResource\RelationManagers;
 use App\Models\Invoice;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -23,7 +25,17 @@ class InvoiceResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Select::make('customer_id')
+                    ->required()
+                    ->options(
+                        \App\Models\Customer::pluck('customer_name', 'id')
+                    )->searchable()
+                    ->label('Pilih Pelanggan')
+                    ->createOptionForm(
+                        \App\Filament\Resources\CustomerResource::getForm()
+                    )->createOptionUsing(function (array $data): int {
+                        return \App\Models\Customer::create($data)->id;
+                    }),
             ]);
     }
 
@@ -37,7 +49,9 @@ class InvoiceResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()->label('Detail'),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

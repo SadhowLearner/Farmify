@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Models\Category;
+use App\Filament\Resources\UnitResource\Pages;
+use App\Filament\Resources\UnitResource\RelationManagers;
+use App\Models\Unit;
 use Filament\Forms;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -14,22 +13,23 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CategoryResource extends Resource
+class UnitResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Unit::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
-    protected static ?string $activeNavigationIcon = 'heroicon-s-squares-2x2';
-
-    protected static ?string $label = 'Kategori';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $activeNavigationIcon = 'heroicon-s-rectangle-stack';
+    protected static ?string $label = 'Satuan';
+    protected static ?string $title = 'Tambah Satuan';
 
 
     public static function getForm(): array
     {
         return [
-            TextInput::make('category_name')->label('Nama Kategori')
+            Forms\Components\TextInput::make('unit_name')
+                ->label('Nama Unit')
                 ->required()
-                ->unique(ignoreRecord: true),
+                ->maxLength(255),
         ];
     }
 
@@ -43,17 +43,19 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->label('ID')->sortable(),
-                Tables\Columns\TextColumn::make('category_name')->label('Nama Kategori')
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID'),
+                Tables\Columns\TextColumn::make('unit_name')
+                    ->label('Satuan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Tanggal Ditambahkan')
+                    ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: false),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Terakhir Diubah')
+                    ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: false),
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -80,9 +82,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListUnits::route('/'),
+            'create' => Pages\CreateUnit::route('/create'),
+            'edit' => Pages\EditUnit::route('/{record}/edit'),
         ];
     }
 }

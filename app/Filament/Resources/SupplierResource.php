@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -22,31 +23,35 @@ class SupplierResource extends Resource
 
     protected static ?string $label = 'Pemasok';
 
+    public static function getForm(): array
+    {
+        return [
+            Forms\Components\TextInput::make('supplier_name')
+                ->label('Nama Pemasok')
+                ->required()
+                ->maxLength(255),
+            Forms\Components\TextInput::make('company_name')
+                ->label('Nama Perusahaan'),
+            Forms\Components\TextInput::make('phone')
+                ->label('Telepon')
+                ->tel()
+                ->required()
+                ->maxLength(255),
+            Forms\Components\TextInput::make('email')
+                ->label('E-Mail')
+                ->email()
+                ->maxLength(255),
+            Forms\Components\Textarea::make('address')
+                ->label('Alamat')
+                ->columnSpanFull()
+                ->maxLength(255),
+        ];
+    }
+
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('company_name')
-                    ->label('Nama Perusahaan'),
-                Forms\Components\TextInput::make('supplier_name')
-                    ->label('Nama Pemasok')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->label('E-mail')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('phone')
-                    ->label('Telepon')
-                    ->tel()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('address')
-                    ->label('Alamat')
-                    ->columnSpanFull()
-                    ->required()
-                    ->maxLength(255),
-            ]);
+            ->schema(Self::getForm());
     }
 
     public static function table(Table $table): Table
@@ -68,6 +73,17 @@ class SupplierResource extends Resource
                 Tables\Columns\TextColumn::make('address')
                     ->label('Alamat')
                     ->toggleable(isToggledHiddenByDefault: true)
+                    ->limit(10)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+
+                        // Only render the tooltip if the column content exceeds the length limit.
+                        return $state;
+                    })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Waktu Ditambahkan')
@@ -83,9 +99,9 @@ class SupplierResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()->label('Detail'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

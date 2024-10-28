@@ -19,18 +19,29 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
+    protected static ?string $activeNavigationIcon = 'heroicon-s-credit-card';
+    protected static ?string $label = 'Pembelian';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('product_id')
+                Forms\Components\Select::make('product_id')
                     ->required()
-                    ->numeric(),
+                    ->options(
+                        \App\Models\Product::all()->pluck('product_name', 'id')
+                    )->searchable()
+                    ->label('Pilih Barang'),
                 Forms\Components\TextInput::make('qty')
+                    ->label('Jumlah ')
                     ->required()
                     ->numeric(),
                 Forms\Components\DateTimePicker::make('order_date')
-                    ->required(),
+                    ->required()
+                    ->native(false)
+                    ->prefix('Waktu Pembelian')
+                    ->closeOnDateSelection()
+                    ->default(now()),
             ]);
     }
 
@@ -42,9 +53,11 @@ class OrderResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('qty')
+                    ->label('Kuantitas')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('order_date')
+                    ->label('Tanggal Pembelian')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -60,7 +73,9 @@ class OrderResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()->label('Detail'),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
