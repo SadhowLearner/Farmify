@@ -38,6 +38,7 @@ class OrderResource extends Resource
                     ->numeric(),
                 Forms\Components\DateTimePicker::make('order_date')
                     ->required()
+                    ->disabled()
                     ->native(false)
                     ->prefix('Waktu Pembelian')
                     ->closeOnDateSelection()
