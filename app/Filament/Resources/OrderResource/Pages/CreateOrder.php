@@ -13,7 +13,15 @@ class CreateOrder extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->previousUrl ?? $this->getResource()::getUrl('index');
+        $orderNumber = $this->record->order_number;
+        $orderId = $this->record->id;
+        return route(
+            'filament.admin.resources.invoices.create',[
+                'order_number' => $orderNumber,
+                'order_id' => $orderId,
+            ]
+            
+        );
     }
 
     protected function getFormActions(): array

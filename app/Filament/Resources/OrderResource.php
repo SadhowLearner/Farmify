@@ -2,16 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\OrderResource\Pages;
-use App\Filament\Resources\OrderResource\RelationManagers;
-use App\Models\Order;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Order;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Widgets\Widget;
+use Filament\Resources\Resource;
+use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use App\Filament\Resources\OrderResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\OrderResource\RelationManagers;
 
 class OrderResource extends Resource
 {
@@ -20,44 +24,66 @@ class OrderResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
     protected static ?string $activeNavigationIcon = 'heroicon-s-credit-card';
-    protected static ?string $label = 'Pembelian';
+    protected static ?string $label = 'Data Pembelian';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('product_id')
-                    ->required()
-                    ->options(
-                        \App\Models\Product::all()->pluck('product_name', 'id')
-                    )->searchable()
-                    ->label('Pilih Barang'),
-                Forms\Components\TextInput::make('qty')
-                    ->label('Jumlah ')
-                    ->required()
-                    ->numeric(),
+                Hidden::make('cashier_id')
+                    ->default(Auth::id())
+                    ->required(),
                 Forms\Components\DateTimePicker::make('order_date')
                     ->required()
-                    ->disabled()
+                    ->label('Tanggal Pembelian')
+                    // ->disabled()
                     ->native(false)
                     ->prefix('Waktu Pembelian')
                     ->closeOnDateSelection()
-                    ->default(now()),
+                    ->default(now())
+                    ->readonly(),
+                Forms\Components\Select::make('customer_id')
+                    ->relationship('customer', 'customer_name')
+                    ->searchable()
+                    ->label('Pelanggan')
+                    ->createOptionForm(
+                        \App\Filament\Resources\CustomerResource::getForm()
+                    )
+                    ->required(),
+                Forms\Components\TextInput::make('order_number')
+                    ->unique()
+                    ->label('Nomor Pembelian')
+                    ->readonly()
+                    ->default(fn() => 'ORD-' . now()->format('Ymd') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT))
+                    ->required()
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('total')
+                    ->numeric()
+                    ->label('Total Pembelian')
+                    ->readonly()
+                    ->hidden(),
+                // Forms\Components\Select::make('product_id')
+                //     ->required()
+                //     ->options(
+                //         \App\Models\Product::all()->pluck('product_name', 'id')
+                //     )->searchable()
+                //     ->label('Pilih Barang'),
+                // Forms\Components\TextInput::make('qty')
+                //     ->label('Jumlah ')
+                //     ->required()
+                //     ->numeric(),
             ]);
     }
-
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('product_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('qty')
-                    ->label('Kuantitas')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('customer.customer_name')->label('Pelanggan')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('order_number')->searchable()->label('Nomor Order'),
+                Tables\Columns\TextColumn::make('total')->money('IDR', true),
                 Tables\Columns\TextColumn::make('order_date')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Tanggal Pembelian')
                     ->dateTime()
                     ->sortable(),
@@ -85,19 +111,12 @@ class OrderResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListOrders::route('/'),
             'create' => Pages\CreateOrder::route('/create'),
-            'edit' => Pages\EditOrder::route('/{record}/edit'),
+            // 'edit' => Pages\EditOrder::route('/{record}/edit'),
         ];
     }
 }

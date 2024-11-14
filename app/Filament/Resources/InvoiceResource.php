@@ -2,18 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\InvoiceResource\Pages;
-use App\Filament\Resources\InvoiceResource\RelationManagers;
-use App\Models\Invoice;
 use Filament\Forms;
+use Filament\Tables;
+use App\Models\Order;
+use App\Models\Invoice;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Forms\Form;
+use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\InvoiceResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\InvoiceResource\RelationManagers;
 
 class InvoiceResource extends Resource
 {
@@ -23,19 +28,59 @@ class InvoiceResource extends Resource
 
     public static function form(Form $form): Form
     {
+        if (request()->filled('order_number')) {
+            $order = request('order_number');
+        }
+        $orderId = request('order_id');
         return $form
             ->schema([
-                Select::make('customer_id')
+                Hidden::make('order_id')->required()
+                    ->default($orderId),
+                TextInput::make('order_number')
+                    ->label('Nomor Pesanan')
+                    ->default($order ?? 'Belum ada pesanan')
+                    ->readonly()
                     ->required()
-                    ->options(
-                        \App\Models\Customer::pluck('customer_name', 'id')
-                    )->searchable()
-                    ->label('Pilih Pelanggan')
-                    ->createOptionForm(
-                        \App\Filament\Resources\CustomerResource::getForm()
-                    )->createOptionUsing(function (array $data): int {
-                        return \App\Models\Customer::create($data)->id;
+                    ->columnSpanFull(),
+                Grid::make()
+                    ->schema([
+                        Select::make('product_id')
+                            ->relationship('product', 'product_name')
+                            ->reactive()
+                            ->label('Nama Barang')
+                            ->afterStateUpdated(function ($state, Set $set, Get $get) {
+                                $barang = \App\Models\Product::find($state);
+                                $set('price', $barang->unit_price ?? 'Harga Tidak Ditemukan');
+                                $set('subtotal', ($get('price') ?? 0) * ($get('qty') ?? 0));
+                            })
+                            ->columnSpan(2)
+                            ->required()
+                            ->searchable(),
+                        TextInput::make('qty')
+                            ->label('Kuantitas')
+                            ->numeric()
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, Set $set, Get $get) {
+                                $set('subtotal', ($get('price') ?? 0) * ($state ?? 0));
+                            }),
+                    ])->columns(3),
+                TextInput::make('price')
+                    ->label('Harga Barang')
+                    ->numeric()
+                    ->required()
+                    ->readonly()
+                    ->reactive()
+                    ->columnSpan(1)
+                    ->afterStateUpdated(function ($state, Set $set, Get $get) {
+                        $set('subtotal', ($get('qty') ?? 0) * ($state ?? 0));
                     }),
+                TextInput::make('subtotal')
+                    ->label('Subtotal')
+                    ->numeric()
+                    ->readonly() // Disable untuk mencegah input manual
+                    ->reactive()
+                    ->default(0) // Nilai default awal
             ]);
     }
 
@@ -43,7 +88,10 @@ class InvoiceResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('product.product_name'),
+                Tables\Columns\TextColumn::make('qty'),
+                Tables\Columns\TextColumn::make('price')->money('idr', true),
+                Tables\Columns\TextColumn::make('subtotal')->money('idr', true),
             ])
             ->filters([
                 //

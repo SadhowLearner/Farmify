@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Arr;
+use App\Http\Controllers\InvoiceController;
 
 class ProductSample {
     public static function all() {
@@ -32,6 +33,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('/invoice/print/{order_id}', [InvoiceController::class, 'print'
+])->name('invoices.print');
 
 
 

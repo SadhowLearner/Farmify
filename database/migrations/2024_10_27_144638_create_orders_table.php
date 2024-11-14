@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId( 'product_id')->constrained('products');
-            $table->integer('qty');
+            $table->string('order_number')->unique()->nullable();
+            $table->decimal('total', 10, 2)->nullable(); // hasi dari semua penambahan subtotal
+            $table->foreignId('customer_id')->constrained('customers')->nullable();
+            $table->foreignId('cashier_id')->constrained('users')->nullable();
             $table->timestamp('order_date');
             $table->timestamps();
         });

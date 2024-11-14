@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('invoice_date');
-            $table->foreignId('customer_id')->constrained('customers');
-            $table->integer('total_amount');
-            $table->foreignId('cashier_id')->constrained('users');
             $table->foreignId('product_id')->constrained('products');
+            $table->foreignId('order_id')->constrained('orders');
+            $table->String('order_number');
+            $table->integer('qty'); // quantity
+            $table->decimal('price', 10, 2); // dari harga produk ditambahkan untuk  jaga-jaga jika produknya berubah harga
+            $table->decimal('subtotal', 15, 2); //price * qty
             $table->timestamps();
         });
     }
