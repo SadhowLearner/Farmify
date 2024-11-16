@@ -15,6 +15,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\InvoiceResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -25,6 +26,7 @@ class InvoiceResource extends Resource
     protected static ?string $model = Invoice::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
+    protected static ?string $label = 'Detail Pesanan';
 
     public static function form(Form $form): Form
     {
@@ -36,6 +38,11 @@ class InvoiceResource extends Resource
             ->schema([
                 Hidden::make('order_id')->required()
                     ->default($orderId),
+                // TextInput::make('customer.customer_name')
+                //     ->label('Nomor Pesanan')
+                //     ->readonly()
+                //     ->required()
+                //     ->columnSpanFull(),
                 TextInput::make('order_number')
                     ->label('Nomor Pesanan')
                     ->default($order ?? 'Belum ada pesanan')
@@ -88,17 +95,21 @@ class InvoiceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('product.product_name'),
-                Tables\Columns\TextColumn::make('qty'),
-                Tables\Columns\TextColumn::make('price')->money('idr', true),
+                Tables\Columns\TextColumn::make('product.product_name')->label('Item'),
+                Tables\Columns\TextColumn::make('order_number')->label('Nomor Pesanan'),
+                Tables\Columns\TextColumn::make('qty')->label('Jumlah Barang'),
+                Tables\Columns\TextColumn::make('price')->money('idr', true)->label('Harga Barang'),
                 Tables\Columns\TextColumn::make('subtotal')->money('idr', true),
             ])
             ->filters([
-                //
+                SelectFilter::make('order_id')
+                    ->label('Filter dari Order')
+                    ->options(Order::all()->pluck('order_number', 'id'))
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->label('Detail'),
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

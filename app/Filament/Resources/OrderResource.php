@@ -24,6 +24,7 @@ class OrderResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
     protected static ?string $activeNavigationIcon = 'heroicon-s-credit-card';
+
     protected static ?string $label = 'Data Pembelian';
 
     public static function form(Form $form): Form
@@ -42,6 +43,12 @@ class OrderResource extends Resource
                     ->closeOnDateSelection()
                     ->default(now())
                     ->readonly(),
+                Forms\Components\TextInput::make('order_number')
+                    ->unique()
+                    ->label('Nomor Pembelian')
+                    ->readonly()
+                    ->default(fn() => 'ORD-' . now()->format('Ymd') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT))
+                    ->required(),
                 Forms\Components\Select::make('customer_id')
                     ->relationship('customer', 'customer_name')
                     ->searchable()
@@ -49,12 +56,6 @@ class OrderResource extends Resource
                     ->createOptionForm(
                         \App\Filament\Resources\CustomerResource::getForm()
                     )
-                    ->required(),
-                Forms\Components\TextInput::make('order_number')
-                    ->unique()
-                    ->label('Nomor Pembelian')
-                    ->readonly()
-                    ->default(fn() => 'ORD-' . now()->format('Ymd') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT))
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('total')
@@ -80,7 +81,7 @@ class OrderResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('customer.customer_name')->label('Pelanggan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('order_number')->searchable()->label('Nomor Order'),
+                Tables\Columns\TextColumn::make('order_number')->searchable()->label('Nomor Pembelian'),
                 Tables\Columns\TextColumn::make('total')->money('IDR', true),
                 Tables\Columns\TextColumn::make('order_date')
                     ->toggleable(isToggledHiddenByDefault: true)

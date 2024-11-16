@@ -2,23 +2,53 @@
 
 namespace App\Filament\Resources\InvoiceResource\Pages;
 
-use App\Filament\Resources\InvoiceResource;
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\InvoiceResource;
+use App\Filament\Resources\InvoiceResource\Widgets\InvoiceWidget;
 
 class EditInvoice extends EditRecord
 {
     protected static string $resource = InvoiceResource::class;
 
-    protected function getRedirectUrl(): string
+    public function getFooterWidgetsColumns(): int | array
     {
-        return $this->previousUrl ?? $this->getResource()::getUrl('index');
+        return 1;
     }
 
-    protected function getHeaderActions(): array
+    protected function getFormActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Action::make('create')
+                ->label('Simpan')
+                ->submit('create')
+                ->keyBindings(['mod+s']),
+        ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        $order_number = $this->record->order_number;
+        $orderId = $this->record->order_id;
+        return route(
+            'filament.admin.resources.invoices.create',
+            [
+                'order_number' => $order_number,
+                'order_id' => $orderId,
+            ]
+
+        );
+    }
+
+    protected function getFooterWidgets(): array
+    {
+        return [
+            InvoiceWidget::make(
+                [
+                    'record' => request('order_id'),
+                ]
+            ),
         ];
     }
 }

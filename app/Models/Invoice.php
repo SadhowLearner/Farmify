@@ -8,15 +8,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Invoice extends Model
 {
+
     use HasFactory;
 
+    protected static function booted()
+    {
+        static::created(function ($invoice) {
+            // Mengambil produk terkait
+            $product = $invoice->product;
+            
+            // Mengurangi stok berdasarkan qty yang ada di invoice
+            if ($product && $invoice->qty) {
+                $product->decrement('stock', $invoice->qty);
+            }
+        });
+    }
+    
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
-    }
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo(Customer::class);
     }
     
     public function product(): BelongsTo

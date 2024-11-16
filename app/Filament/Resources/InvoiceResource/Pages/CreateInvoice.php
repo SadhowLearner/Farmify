@@ -21,9 +21,15 @@ class CreateInvoice extends CreateRecord
     {
         return [
             Action::make('create')
-                ->label('Simpan')
+                ->label('Tambah')
                 ->submit('create')
-                ->keyBindings(['mod+s']),
+                ->keyBindings(['mod+s'])
+                ->outlined(),
+            Action::make('newOrder')
+                ->label('Buat Order Baru')
+                ->color('success') // Warna hijau untuk membedakan
+                ->action(fn() => redirect()->route('filament.admin.resources.orders.create')) // Arahkan ke halaman Buat Order Baru
+                ->icon('heroicon-o-plus'),
         ];
     }
 

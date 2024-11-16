@@ -7,6 +7,7 @@ use App\Models\Order;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\DB;
 use Filament\Tables\Actions\Action;
+use Filament\Actions\Action as BaseAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -16,6 +17,8 @@ class InvoiceWidget extends BaseWidget
 {
 
     public $orderId;
+
+    protected static ?string $heading = 'Detail Transaksi';
 
     public function mount($record)
     {
@@ -28,7 +31,7 @@ class InvoiceWidget extends BaseWidget
                 \App\Models\Invoice::query()->where('order_id', $this->orderId),
             )
             ->columns([
-                TextColumn::make('order_number')->label('Nomor Pesanan'),
+                TextColumn::make('order_number')->label('Nomor Pesanan')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('product.product_name')->label('Nama Barang')->alignCenter(),
                 TextColumn::make('qty')->label('Jumlah Barang')->alignCenter(),
                 TextColumn::make('price')->label('Harga Barang')->money('idr', true)->alignCenter(),
@@ -46,13 +49,18 @@ class InvoiceWidget extends BaseWidget
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->form([
-                        TextInput::make('qty')->required()
+                        TextInput::make('qty')->required()->label('Jumlah Barang'),
                     ]),
                 Tables\Actions\DeleteAction::make(),
+            ])
+            ->headerActions([
                 Action::make('print')
                     ->label('Print')
-                    ->url(fn () => route('invoice.print', ['order_id' => $this->orderId]))
-                    ->openUrlInNewTab(),
+                    ->icon('heroicon-o-printer')
+                    ->url(fn() => route('invoices.print', ['order_id' => $this->orderId]))
+                    ->openUrlInNewTab()
+                    ->action(fn () => redirect()->route('orders.create'))
+                    ->color('primary'), // Menentukan warna tombol
             ]);
     }
 

@@ -84,10 +84,15 @@ class ProductResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('ID')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('product_name')
                     ->label('Nama Barang')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('supplier.supplier_name')
+                    ->label('Nama Pmasok')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('description')
                     ->label('Deskripsi')
                     ->limit(50)
@@ -102,8 +107,12 @@ class ProductResource extends Resource
                     ->label('Stok')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('unit')
-                    ->label('Satuan Unit'),
+                Tables\Columns\TextColumn::make('unit.unit_name')
+                    ->label('Satuan Unit')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('category.category_name')
+                    ->label('Kategori')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

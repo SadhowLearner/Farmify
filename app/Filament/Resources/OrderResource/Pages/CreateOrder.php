@@ -11,16 +11,19 @@ class CreateOrder extends CreateRecord
 {
     protected static string $resource = OrderResource::class;
 
+    protected static ?string $title = 'Isi Informasi Pembelian';
+
     protected function getRedirectUrl(): string
     {
         $orderNumber = $this->record->order_number;
         $orderId = $this->record->id;
         return route(
-            'filament.admin.resources.invoices.create',[
+            'filament.admin.resources.invoices.create',
+            [
                 'order_number' => $orderNumber,
                 'order_id' => $orderId,
             ]
-            
+
         );
     }
 
@@ -28,9 +31,9 @@ class CreateOrder extends CreateRecord
     {
         return [
             Action::make('create')
-            ->label('Selanjutnya')
-            ->submit('create')
-            ->keyBindings(['mod+s']),
+                ->label('Selanjutnya')
+                ->submit('create')
+                ->keyBindings(['mod+s']),
         ];
     }
 }
