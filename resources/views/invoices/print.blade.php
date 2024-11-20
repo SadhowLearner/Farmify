@@ -59,7 +59,7 @@
 
     <!-- Auto-print Script -->
     <script>
-        // window.print();
+        window.print();
     </script>
     @vite(['resources/js/app.js'])
 </body>

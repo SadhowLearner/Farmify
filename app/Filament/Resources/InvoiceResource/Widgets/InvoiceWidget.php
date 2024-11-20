@@ -34,6 +34,7 @@ class InvoiceWidget extends BaseWidget
                 TextColumn::make('order_number')->label('Nomor Pesanan')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('product.product_name')->label('Nama Barang')->alignCenter(),
                 TextColumn::make('qty')->label('Jumlah Barang')->alignCenter(),
+                TextColumn::make('product.unit.unit_name')->label('Satuan')->alignCenter(),
                 TextColumn::make('price')->label('Harga Barang')->money('idr', true)->alignCenter(),
                 TextColumn::make('subtotal')->label('Subtotal')->money('idr', true)->alignEnd()
                     ->summarize(

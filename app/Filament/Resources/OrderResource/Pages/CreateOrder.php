@@ -11,7 +11,7 @@ class CreateOrder extends CreateRecord
 {
     protected static string $resource = OrderResource::class;
 
-    protected static ?string $title = 'Isi Informasi Pembelian';
+    protected static ?string $title = 'Isi Informasi Pesanan';
 
     protected function getRedirectUrl(): string
     {

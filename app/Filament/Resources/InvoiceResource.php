@@ -58,11 +58,17 @@ class InvoiceResource extends Resource
                             ->afterStateUpdated(function ($state, Set $set, Get $get) {
                                 $barang = \App\Models\Product::find($state);
                                 $set('price', $barang->unit_price ?? 'Harga Tidak Ditemukan');
+                                $set('unit', $barang->unit->unit_name ?? 'Satuan Tidak Ditemukan');
                                 $set('subtotal', ($get('price') ?? 0) * ($get('qty') ?? 0));
                             })
-                            ->columnSpan(2)
+                            ->columnSpan(7)
                             ->required()
                             ->searchable(),
+                        TextInput::make('unit')
+                            ->label('Unit')
+                            ->disabled()
+                            ->reactive()
+                            ->columnSpan(1),
                         TextInput::make('qty')
                             ->label('Kuantitas')
                             ->numeric()
@@ -70,8 +76,9 @@ class InvoiceResource extends Resource
                             ->reactive()
                             ->afterStateUpdated(function ($state, Set $set, Get $get) {
                                 $set('subtotal', ($get('price') ?? 0) * ($state ?? 0));
-                            }),
-                    ])->columns(3),
+                            })
+                            ->columnSpan(4 ),
+                    ])->columns(12),
                 TextInput::make('price')
                     ->label('Harga Barang')
                     ->numeric()

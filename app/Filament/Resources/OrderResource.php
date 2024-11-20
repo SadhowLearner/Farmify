@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Order;
+use App\Models\Customer;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Widgets\Widget;
@@ -25,7 +26,7 @@ class OrderResource extends Resource
 
     protected static ?string $activeNavigationIcon = 'heroicon-s-credit-card';
 
-    protected static ?string $label = 'Data Pembelian';
+    protected static ?string $label = 'Data Pesanan';
 
     public static function form(Form $form): Form
     {
@@ -36,22 +37,23 @@ class OrderResource extends Resource
                     ->required(),
                 Forms\Components\DateTimePicker::make('order_date')
                     ->required()
-                    ->label('Tanggal Pembelian')
+                    ->label('Tanggal Pemesanan')
                     // ->disabled()
                     ->native(false)
-                    ->prefix('Waktu Pembelian')
+                    ->prefix('Waktu Pemesanan')
                     ->closeOnDateSelection()
                     ->default(now())
                     ->readonly(),
                 Forms\Components\TextInput::make('order_number')
                     ->unique()
-                    ->label('Nomor Pembelian')
+                    ->label('Nomor Pesanan')
                     ->readonly()
                     ->default(fn() => 'ORD-' . now()->format('Ymd') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT))
                     ->required(),
                 Forms\Components\Select::make('customer_id')
                     ->relationship('customer', 'customer_name')
                     ->searchable()
+                    ->reactive()
                     ->label('Pelanggan')
                     ->createOptionForm(
                         \App\Filament\Resources\CustomerResource::getForm()
@@ -60,7 +62,7 @@ class OrderResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('total')
                     ->numeric()
-                    ->label('Total Pembelian')
+                    ->label('Total Pesanan')
                     ->readonly()
                     ->hidden(),
                 // Forms\Components\Select::make('product_id')
@@ -81,11 +83,11 @@ class OrderResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('customer.customer_name')->label('Pelanggan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('order_number')->searchable()->label('Nomor Pembelian'),
+                Tables\Columns\TextColumn::make('order_number')->searchable()->label('Nomor Pesanan'),
                 Tables\Columns\TextColumn::make('total')->money('IDR', true),
                 Tables\Columns\TextColumn::make('order_date')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Tanggal Pembelian')
+                    ->label('Tanggal Pesanan')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

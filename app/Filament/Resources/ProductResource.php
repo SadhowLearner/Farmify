@@ -90,7 +90,7 @@ class ProductResource extends Resource
                     ->label('Nama Barang')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('supplier.supplier_name')
-                    ->label('Nama Pmasok')
+                    ->label('Nama Pemasok')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('description')
@@ -102,17 +102,21 @@ class ProductResource extends Resource
                     ->label('Harga')
                     ->numeric()
                     ->money('IDR')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('stock')
                     ->label('Stok')
                     ->numeric()
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('unit.unit_name')
                     ->label('Satuan Unit')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('category.category_name')
                     ->label('Kategori')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
